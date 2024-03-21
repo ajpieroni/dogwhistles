@@ -1,5 +1,16 @@
 import re
 
+# clean text function
+def clean_text(text):
+    """Function to clean the text data."""
+    text = text.strip()  # Trim white spaces
+    text = re.sub(r'\s+', ' ', text)  # Replace multiple spaces with a single space
+    text = re.sub(r'\\', '', text)  # Remove backslashes
+    # remove quotes
+    text = re.sub(r'"', '', text)
+    # Add any additional cleaning steps here if needed
+    return text
+
 def parse_glossary(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
@@ -31,8 +42,8 @@ def parse_glossary(file_path):
 
         # Creating formatted training pairs
         for surface_form in surface_forms:
-            input_text = re.sub(r'\\', '', example_context.replace(term, surface_form).replace('\n', ' ')).strip()
-            output_text = covert_meaning.replace('\n', ' ').strip()
+            input_text = clean_text(example_context.replace(term, surface_form))
+            output_text = clean_text(covert_meaning)
             formatted_pair = f"Input: {input_text}\nOutput: {output_text}\n"
             dataset.append(formatted_pair)
 
