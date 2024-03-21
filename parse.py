@@ -6,8 +6,7 @@ def clean_text(text):
     text = text.strip()  # Trim white spaces
     text = re.sub(r'\s+', ' ', text)  # Replace multiple spaces with a single space
     text = re.sub(r'\\', '', text)  # Remove backslashes
-    # remove quotes
-    text = re.sub(r'"', '', text)
+    text = re.sub(r'"', '', text)  # Remove quotes
     # Add any additional cleaning steps here if needed
     return text
 
@@ -17,6 +16,8 @@ def parse_glossary(file_path):
 
     entries = content.split('**')[1:]  # Split by bolded entry titles
 
+    unique_inputs = set()
+    unique_outputs = set()
     dataset = []
     skipped_entries = 0
 
@@ -45,21 +46,26 @@ def parse_glossary(file_path):
             input_text = clean_text(example_context.replace(term, surface_form))
             output_text = clean_text(covert_meaning)
             formatted_pair = f"Input: {input_text}\nOutput: {output_text}\n"
-            dataset.append(formatted_pair)
+            
+            # Add to unique sets and dataset
+            if input_text not in unique_inputs or output_text not in unique_outputs:
+                unique_inputs.add(input_text)
+                unique_outputs.add(output_text)
+                dataset.append(formatted_pair)
 
-    return dataset, skipped_entries
+    return dataset, skipped_entries, unique_inputs, unique_outputs
 
 # Example usage
 file_path = 'dogwhistlegloss.md'
 
-parsed_dataset, skipped_entries = parse_glossary(file_path)
+parsed_dataset, skipped_entries, unique_inputs, unique_outputs = parse_glossary(file_path)
 
 # Diagnostic message
 print(f"Skipped {skipped_entries} entries due to missing example contexts.")
 print(f"Processed {len(parsed_dataset)} entries.")
-# print length of the entries
-print(len(parsed_dataset))
+print(f"Unique Inputs: {len(unique_inputs)}")
+print(f"Unique Outputs: {len(unique_outputs)}")
 
 # Print the first few formatted pairs for review
-for pair in parsed_dataset[:10]:
+for pair in parsed_dataset[:300]:
     print(pair)
