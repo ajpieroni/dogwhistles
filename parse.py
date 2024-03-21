@@ -7,6 +7,7 @@ def parse_glossary(file_path):
     entries = content.split('**')[1:]  # Split by bolded entry titles
 
     dataset = []
+    skipped_entries = 0
 
     for i in range(0, len(entries), 2):
         term = entries[i].strip()
@@ -20,28 +21,34 @@ def parse_glossary(file_path):
         covert_meaning_match = re.search(r'_Covert \(in-group\) meaning_:\s*(.*?)\n', details)
         covert_meaning = covert_meaning_match.group(1) if covert_meaning_match else "Unknown"
 
-        # Extracting example context
-        example_context_match = re.search(r'Example context \(in \[.*?\]\(.*?\)\)\s*\n\s*(.*?)\n', details)
-        example_context = example_context_match.group(1) if example_context_match else None
+        # Adjusting the regex for extracting example context
+        example_context_match = re.search(r'Example context.*?\n\s*(.*?)(?=\n\S)', details, re.DOTALL)
+        example_context = example_context_match.group(1).strip() if example_context_match else None
 
-        # Creating training pairs
+        if not example_context:
+            skipped_entries += 1
+            continue
+
+        # Creating formatted training pairs
         for surface_form in surface_forms:
-            if example_context:
-                input_text = example_context.replace(term, surface_form)
-            else:
-                # Create a generic sentence if no context is provided
-                input_text = f"This statement includes the term '{surface_form}'."
+            input_text = re.sub(r'\\', '', example_context.replace(term, surface_form).replace('\n', ' ')).strip()
+            output_text = covert_meaning.replace('\n', ' ').strip()
+            formatted_pair = f"Input: {input_text}\nOutput: {output_text}\n"
+            dataset.append(formatted_pair)
 
-            output_text = covert_meaning
-            dataset.append((input_text, output_text))
-
-    return dataset
+    return dataset, skipped_entries
 
 # Example usage
 file_path = 'dogwhistlegloss.md'
 
-parsed_dataset = parse_glossary(file_path)
+parsed_dataset, skipped_entries = parse_glossary(file_path)
 
-# Print the first 100 input-output pairs
-for input_text, output_text in parsed_dataset[:100]:
-    print(f"Input: {input_text}\nOutput: {output_text}\n")
+# Diagnostic message
+print(f"Skipped {skipped_entries} entries due to missing example contexts.")
+print(f"Processed {len(parsed_dataset)} entries.")
+# print length of the entries
+print(len(parsed_dataset))
+
+# Print the first few formatted pairs for review
+for pair in parsed_dataset[:10]:
+    print(pair)
