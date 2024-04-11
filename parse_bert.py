@@ -1,5 +1,8 @@
+# /opt/homebrew/bin/python3.11 "/Users/alexpieroni/Documents/Documents - Alex’s MacBook /Projects/dogwhistles/parse.py"
+
 import csv
 import re
+import pandas as pd
 
 def clean_text(text):
     """Clean the text by removing unwanted characters, spacing, speaker/date info, and URLs."""
@@ -14,6 +17,7 @@ def clean_text(text):
     # Remove backslashes and quotes
     text = re.sub(r'\\', '', text)
     text = re.sub(r'"', '', text)
+    text = text.replace(',', '')
     return text
 
 def parse_glossary(file_path):
@@ -56,8 +60,12 @@ parsed_dataset = parse_glossary(file_path)
 csv_file = 'dogwhistle_dataset.csv'
 with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
-    writer.writerow(['Input', 'Output'])  # Header
+    writer.writerow(['text', 'label'])  # Header
     for input_text, output_text in parsed_dataset:
-        writer.writerow([input_text, output_text])
+        writer.writerow([input_text, 1])
 
+
+tsv_path = 'dogwhistle_dataset.tsv'
+df = pd.read_csv(csv_file)
+df.to_csv(tsv_path, sep='\t', index=False)
 print(f"Dataset with {len(parsed_dataset)} unique entries has been saved to {csv_file}.")
