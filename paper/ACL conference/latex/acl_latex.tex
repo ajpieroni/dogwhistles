@@ -1,0 +1,115 @@
+
+\documentclass[11pt]{article}
+\usepackage{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{graphicx}
+
+\title{Evaluating GPT-3's Ability to Identify Dogwhistle Expressions in Text}
+
+\author{Alexander Pieroni, Alexandra Doss, Aakriti Bhattarai,  Tochi Onuegbu, Dese Elumaro, Maya Markus-Malone}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+  This study investigates the ability of large language models, specifically GPT-3, to detect and interpret dogwhistle expressions in textual content. We use a glossary of dogwhistles, comprising over 340 terms and their manifestations, as the primary dataset for model training and evaluation.
+\end{abstract}
+
+
+\section{Literature Review}
+\subsection{"Identifying Slurs and Lexical Hate Speech via Light-Weight Dimension Projection in Embedding Space"}
+"Identifying Slurs and Lexical Hate Speech via Light-Weight Dimension Projection in Embedding Space" \cite{hoeken2023identifying} develops a model to detect slurs and hate speech contextually. The model uses "hatefulness" as a dimension in text embedding, pairing each slur with a neutral counterpart. This domain-independent approach focuses on cultural meaning over bias, aligning vectors with human-rated associations. The key innovation lies in the projection of text embedding onto a dimension based on lexical pair divergence, categorizing projections as either hateful or neutral. While manipulating hate specificity with different lexical pairs slightly affects the model's false negatives/positives, it largely retains accuracy. The model shows stability in smaller, domain-specific datasets and adeptly identifies non-people-related words, though with a higher false negative rate. Significantly, the model's potential extends beyond slurs, indicating its applicability to broader hate speech detection in the future.
+
+\subsection{"Distributional Properties of Political Dogwhistle Representations in Swedish BERT"}
+"Distributional Properties of Political Dogwhistle Representations in Swedish BERT" \cite{hertzberg2022distributional} analyses Swedish political dogwhistles using NLP techniques. The research involved a survey where 1000 Swedes replaced suspected dogwhistles in sentences with their interpretations. These responses, annotated for correct identification of dogwhistles, were evaluated by trained annotators. Using BERT-based sentence transformers, the study generated semantic representations of these sentences, which were then classified using K-means clustering. Results showed a clear separation between "in-group" and "out-group" responses in the semantic space, aligning with annotator judgments. This separation indicated that dogwhistle interpretations are linearly separable in vector space, demonstrating the effectiveness of advanced NLP models in identifying political dogwhistles.
+
+\subsection{"Covert Hate Speech: White Nationalists and Dog Whistle Communication on Twitter"}
+"Covert Hate Speech: White Nationalists and Dog Whistle Communication on Twitter," \cite{bhat2020covert} investigates the use of covert hate speech, specifically dog whistling and cryptic messaging, by white supremacist groups on Twitter during the 2016 U.S. presidential election.
+
+The methodology involved analyzing the followers of three prominent Republican influencers on Twitter. White supremacist followers were identified using bio buzzwords and profile pictures, like the Confederate flag. The study focused on accounts with the highest follower counts, examining their most recent posts for analysis. Identification of dog whistles involved searching for code words, symbols, keywords, or images, often obscure or recurring across multiple tweets. Information from Operation Google also contributed to identifying these dog whistles. The study noted that the broader linguistic context of coded words was crucial for accurate identification.
+
+The research found that dog whistles were predominantly used to express hatred towards outgroups without resorting to overtly inflammatory language. Additionally, they served as identity markers within the white supremacist community. These markers were used to signal allegiance to specific political groups, assert a strong male identity, and express pride in cultural heritage.
+
+
+\subsection{"Automatic Hate Speech Detection Using Killer Natural Language Processing Optimizing Ensemble Deep Learning Approach"}
+"Automatic Hate Speech Detection Using Killer Natural Language Processing Optimizing Ensemble Deep Learning Approach," \cite{almakhadmeh2020automatic} introduces the KNLPEDNN system, a sophisticated approach for detecting hate speech on Twitter. This system utilizes an advanced natural language processing (NLP) ensemble deep learning technique. The method involves a multi-step process: data collection from Twitter, preprocessing including stemming and tokenization, and extraction of various linguistic features like semantics, sentiment, and unigrams. These features are vectorized and processed through an ensemble deep learning classifier. The classifier is designed to identify tweets as hate speech, offensive speech, or neither, using techniques like N-gram analysis, term frequency, and inverse document frequency. With a reported accuracy of 98.71\% and minimal errors, the system effectively minimizes weak features and optimizes network weights through a gradient descent process. The KNLPEDNN system stands out for its high recall value in identifying hate speech, showcasing the potential of combining NLP and deep learning for automated content moderation on social media platforms.
+\subsection{"Finding Microaggressions in the Wild: A Case for Locating Elusive Phenomena in Social Media Posts"}
+
+
+"Finding Microaggressions in the Wild: A Case for Locating Elusive Phenomena in Social Media Posts" \cite{breitfeller2019microaggressions} makes three critical contributions: firstly, it introduces a novel thematic classification for MAS, demonstrating that moderate annotator agreement is achievable on this challenging task. This challenges the notion that microaggressions are too subjective for reliable identification, showing computational methods can effectively distinguish different themes. Secondly, it presents an innovative active-learning crowd-sourcing method to identify potential MAS from social media, using predictions of offensiveness and annotator rating discrepancies by gender. This method proves effective in uncovering various types of microaggressions. Lastly, the study reveals significant differences between self-reported and observed microaggressions, indicating the need for computational tools to accurately gauge their true prevalence. These contributions collectively address a significant gap in the detection of linguistically subtle offensive language, enhancing the scope and understanding in the field of NLP.
+\subsection{"Detecting White Supremacist Hate Speech Using Domain Specific Word Embedding With Deep Learning and BERT"}
+\cite{defersha2021detection} built a model for detecting hate speech in Afan Oromo texts on social platforms was developed, leveraging a Linear Support Vector Classifier that achieved an F1-score of 64\% after rigorous preprocessing and feature extraction techniques like N-Gram and TF-IDF. The study underscored the importance of appropriate preprocessing, data annotation, and machine learning algorithms in building effective hate speech detection systems.
+
+The study deployed both a BiLSTM model with domain-specific word embeddings and a BERT model, achieving F1-scores of 0.75 and 0.80, respectively. The research highlighted the effectiveness of deep learning and natural language processing techniques, with the BiLSTM model capitalizing on an architecture designed for sequential data and the BERT model benefiting from pretraining on large datasets and its bidirectional contextual understanding.
+
+\subsection{Latent Hatred: A Benchmark for Understanding Implicit Hate Speech}
+
+
+\cite{elsherief2021latent} presents a detailed taxonomy for implicit hate speech and assembles a substantial corpus with finely nuanced labels, thus furnishing valuable resources to advance research in this area.
+
+The research delineates a methodology for data collection, capturing tweets from major U.S. hate groups over a two-year span, leading to a corpus exceeding 4.7 million tweets. The paper's two-tiered annotation process involves crowdsourcing for high-level labels and expert analysis for fine-grained labels, ensuring both breadth and depth in understanding hate speech nuances.
+
+The study evaluates multiple machine learning models, including SVMs with various embeddings and BERT models fine-tuned for implicit hate speech detection, addressing class imbalances with innovative data augmentation strategies and incorporating external knowledge bases. BERT models particularly shine, outperforming other methods and demonstrating a greater grasp of language complexity. 
+
+
+
+
+\section{Methodology}
+\subsection{Data Collection}
+The glossary of dogwhistles, containing 340 English dogwhistles, will be used as the primary dataset, similar to the compilation by Mendelsohn et al. \cite{mendelsohn2023dogwhistles}. We have parsed through the 340 dogwhistle entries, pairing the example context provided in the dataset with the covert meaning, leading to 586 input-output pairs. We will use this dataset to fine-tune a model using HuggingFace's Autotrain. The library includes a range of transformer-based architectures, including BERT, GPT-3, and T5. This fine-tuning will provide the model context with the given dogwhistles \cite{hertzberg2022distributional}, \cite{defersha2021detection}.
+
+
+
+\subsection{Experiment}
+After creating the fine-tuned model, we aim to analyze its ability to both (1) reproduce the initial data passed into the fine tuned model and (2) evaluate the ability of this fine-tuned model to identify the covert meaning in example contexts of other dogwhistles.
+
+\subsection{Evaluation Metrics}
+Our evaluation will focus on the accuracy and completeness of the model in identifying dogwhistles across contexts. We will integrate human evaluation \cite{mendelsohn2023dogwhistles}. If additional time permits, we hope to test the results of different transformer architectures (BERT, T5) on this task to see if there is an architecture that is more effective at understanding and reproducing the covert meaning of dogwhistles. We will also use F1 scores \cite{defersha2021detection}.
+
+\section{Results and Discussion}
+
+\section{Conclusion}
+
+
+\bibliographystyle{acl_natbib}
+\nocite{*}
+\bibliography{custom}
+
+
+
+\end{document}
+
+\section{Related Work}
+Mendelsohn et al.'s "From Dogwhistles to Bullhorns" \cite{mendelsohn2021dogwhistles} provides a foundational framework for our study, particularly in the use of GPT-3 for analyzing dogwhistles.
+
+\section{Methodology}
+\subsection{Data Collection}
+The glossary of dogwhistles, containing 340 English dogwhistles, will be used as the primary dataset, similar to the compilation by Mendelsohn et al. \cite{mendelsohn2021dogwhistles}.
+
+\subsection{Modeling with GPT-3}
+Our project utilizes GPT-3, following the precedent set by Brown et al. in their exploration of language models' capabilities \cite{brown2020language}.
+
+\section{Experimental Setup}
+\subsection{Fine-Tuning GPT-3}
+Following Liu et al.'s approach to fine-tuning language models \cite{liu2019roberta}, we will adapt GPT-3 to our specific dataset of dogwhistles.
+
+\subsection{Evaluation Metrics}
+Our evaluation will focus on the accuracy and completeness of the model in identifying dogwhistles across contexts, as is standard in NLP model assessments \cite{standardNLP2020}.
+
+\section{Results and Discussion}
+
+\section{Conclusion}
+
+\section*{Acknowledgments}
+
+\bibliographystyle{acl_natbib}
+\bibliography{custom}
+
+\appendix
+\section{Supplemental Material}
+\label{sec:appendix}
+
+\end{document}
